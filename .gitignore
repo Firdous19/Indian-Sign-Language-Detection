@@ -1,0 +1,43 @@
+# --- Python / Environment ---
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+.venv
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.lib/
+
+# --- IDEs / Editors ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- OS Related ---
+.DS_Store
+Thumbs.db
+
+# --- Project Specific Data (Large Files) ---
+# Don't upload the raw dataset to GitHub
+dataset/
+
+# Don't upload processed numpy arrays (usually very large)
+X.npy
+y.npy
+
+# --- Models (Binary Files) ---
+# GitHub has a 100MB file limit. 
+# If these files are larger than 100MB, keep them in ignore.
+# If they are small, you can comment these out to include them.
+*.pth
+*.task
+
+# --- Reports/Logs ---
+reports/
+*.log
