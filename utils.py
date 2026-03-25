@@ -1,6 +1,7 @@
 import streamlit as st
 import cv2
 import os
+import math
 
 
 # --- THEME & CSS ---
@@ -121,13 +122,14 @@ def render_header():
     """, unsafe_allow_html=True)
     
     # Custom Navbar Layout
-    c1, c2, c3 = st.columns([2, 3, 0.5])
+    c1, c2, c3 = st.columns([2, 4, 0.5])
     with c1:
         st.markdown('<div class="logo-text">Gestura</div>', unsafe_allow_html=True)
     with c2:
         # Navigation Buttons (Using switch_page for MPA)
-        b1, b2, b3, _ = st.columns([1, 1, 1, 2])
+        b1, b_dash, b2, b3, _ = st.columns([1, 1.2, 1, 1, 1])
         if b1.button("Home"): st.switch_page("pages/Home.py")
+        if b_dash.button("Dashboard"): st.switch_page("pages/Dashboard.py")
         if b2.button("Translate"): st.switch_page("pages/Translate.py")
         if b3.button("About"): st.switch_page("pages/About.py")
     
@@ -138,3 +140,4 @@ def render_header():
             st.session_state.theme = "Light" if st.session_state.theme == "Dark" else "Dark"
             st.rerun()
     st.markdown("---")
+    

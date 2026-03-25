@@ -3,8 +3,9 @@ import cv2
 import time
 import os
 import sys
-import pyttsx3
 from threading import Thread
+from gtts import gTTS
+import pygame
 
 # --- PATH RESOLUTION ---
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -52,18 +53,37 @@ def cb_clear():
     st.session_state.sentence = ""
     st.session_state.current_word = ""
 
+
 def speak_text(text):
     if not text:
         return
+    
     def _speak():
         try:
-            # Note: pyttsx3 can sometimes struggle in threaded web environments
-            engine = pyttsx3.init()
-            engine.say(text)
-            engine.runAndWait()
-        except Exception as e: 
-            print(f"TTS Error: {e}")
+            # 1. Generate Indian English Audio
+            tts = gTTS(text=text, lang='en', tld='co.in')
+            filename = f"voice_{int(time.time())}.mp3"
+            tts.save(filename)
+            
+            # 2. Play Audio safely using pygame
+            pygame.mixer.init()
+            pygame.mixer.music.load(filename)
+            pygame.mixer.music.play()
+            
+            # Wait for the audio to finish playing
+            while pygame.mixer.music.get_busy():
+                time.sleep(0.1)
+                
+            # 3. Release the file and delete it
+            pygame.mixer.quit()
+            os.remove(filename)
+            
+        except Exception as e:
+            print(f"Voice Error: {e}")
+
     Thread(target=_speak).start()
+
+
 
 # --- INIT DETECTION STATE ---
 if "stable_cnt" not in st.session_state:
@@ -131,7 +151,7 @@ with col_ui:
 
     st.button("🔊 Speak", type="primary", use_container_width=True, on_click=lambda: speak_text(st.session_state.sentence))
 
-# --- DETECTION LOOP ---
+# # --- DETECTION LOOP ---
 if st.session_state.camera_active and predictor:
     if st.session_state.camera is None or not st.session_state.camera.isOpened():
         st.session_state.camera = cv2.VideoCapture(0)
@@ -198,6 +218,7 @@ if st.session_state.camera_active and predictor:
             st.session_state.camera.release()
             st.session_state.camera = None
             video_ph.empty()
+
 
 # Final safety cleanup
 if not st.session_state.camera_active and st.session_state.camera is not None:
