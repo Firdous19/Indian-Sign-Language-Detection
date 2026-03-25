@@ -45,11 +45,21 @@ def get_theme_css(theme):
         
         /* Text & Buttons */
         .detect-text {{ font-size: 2rem; font-weight: 700; color: {text_color}; text-align: center; }}
+        
         div.stButton > button {{
             background-color: {card_bg} !important; color: {text_color} !important;
-            border: 1px solid {border_color} !important; border-radius: 8px;
+            padding: 12px 40px;
+            border: 1px solid {border_color} !important; 
+            border-radius: 50px !important;
+            font-weight: 600 !important;
+            transition: 0.3s !important;
         }}
-        div.stButton > button:hover {{ border-color: {accent1} !important; color: {accent1} !important; }}
+        
+        div.stButton > button:hover {{ 
+            border-color: {accent1} !important; 
+            color: {accent1} !important; 
+        }}
+        
         div.stButton > button[kind="primary"] {{
             background: linear-gradient(90deg, {accent1}, {accent2}) !important;
             color: white !important; border: none !important;
@@ -90,12 +100,22 @@ def render_header():
     # Remove default top padding
     st.markdown("""
         <style>
-            [data-testid="stSidebar"] {
-                display: none;
-            }
-            [data-testid="collapsedControl"] {
-                display: none;
-            }
+            /* 1. COMPLETELY HIDE SIDEBAR & COLLAPSE BUTTON (STOPS FLICKERING) */
+            [data-testid="stSidebar"], 
+            [data-testid="collapsedControl"], 
+            .st-emotion-cache-16ids0d, 
+            .st-emotion-cache-10o12ca {{
+                display: none !important;
+                width: 0px !important;
+            }}
+            
+            /* 2. REMOVE PADDING FROM THE LEFT WHERE SIDEBAR USED TO BE */
+            section[data-testid="stMainView"] {{
+                width: 100% !important;
+                margin-left: 0px !important;
+            }}
+            
+            
             .block-container {
                 padding-top: 01rem;
                 padding-bottom: 0rem;
@@ -112,12 +132,12 @@ def render_header():
                 margin: 0;
             }
 
-            div[data-testid="stButton"] > button {
-                padding: 8px 30px;
-                border-radius: 8px;
-                font-size: 22px;
-                font-weight: 500;
-            }
+            /* Align the horizontal navbar blocks */
+            div[data-testid="stHorizontalBlock"] {{
+                justify-content: space-between;
+                align-items: center;
+            }}
+            
         </style>
     """, unsafe_allow_html=True)
     
